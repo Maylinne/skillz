@@ -1,0 +1,54 @@
+{
+  "playerId": null,
+  "playerName": "Zaheera",
+  "playerRace": "HUMAN",
+  "attributes": [
+    {
+      "id": null,
+      "name": "STRENGTH",
+      "value": 15,
+      "playerId": null
+    },
+    {
+      "id": null,
+      "name": "INTELLIGENCE",
+      "value": 18,
+      "playerId": null
+    },
+    {
+      "id": null,
+      "name": "WILLPOWER",
+      "value": 17,
+      "playerId": null
+    }
+  ],
+  "skills": [
+    {
+      "skillDef": {
+        "id": 1,
+        "name": "Pain Tolerance",
+        "difficulty": "HARD",
+        "attribute": "WILLPOWER"
+      },
+      "value": 4
+    },
+    {
+      "skillDef": {
+        "id": 2,
+        "name": "Shortsword",
+        "difficulty": "NORMAL",
+        "attribute": "STRENGTH"
+      },
+      "value": 6
+    },
+    {
+      "skillDef": {
+        "id": 3,
+        "name": "Knowledge of Magic",
+        "difficulty": "KNOWLEDGE",
+        "attribute": "INTELLIGENCE"
+      },
+      "value": 9
+    }
+  ]
+}

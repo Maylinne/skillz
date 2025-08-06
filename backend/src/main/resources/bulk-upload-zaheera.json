@@ -1,0 +1,64 @@
+{
+  "playerId": null,
+  "playerName": "Zaheera",
+  "playerRace": "HUMAN",
+  "attributes": [
+    { "id": null, "name": "STRENGTH", "value": 6, "playerId": null },
+    { "id": null, "name": "DEXTERITY", "value": 10, "playerId": null },
+    { "id": null, "name": "SPEED", "value": 11, "playerId": null },
+    { "id": null, "name": "STAMINA", "value": 9, "playerId": null },
+    { "id": null, "name": "HEALTH", "value": 8, "playerId": null },
+    { "id": null, "name": "CHARISMA", "value": 13, "playerId": null },
+    { "id": null, "name": "INTELLIGENCE", "value": 18, "playerId": null },
+    { "id": null, "name": "WILLPOWER", "value": 17, "playerId": null },
+    { "id": null, "name": "ASTRAL", "value": 16, "playerId": null },
+    { "id": null, "name": "PERCEPTION", "value": 14, "playerId": null }
+  ],
+  "skills": [
+    {
+      "skillDef": {
+        "id": 8,
+        "name": "Ostromgép",
+        "difficulty": "NORMAL",
+        "attribute": "INTELLIGENCE"
+      },
+      "value": 1
+    },
+    {
+      "skillDef": {
+        "id": 11,
+        "name": "Taktika",
+        "difficulty": "NORMAL",
+        "attribute": "INTELLIGENCE"
+      },
+      "value": 2
+    },
+    {
+      "skillDef": {
+        "id": 13,
+        "name": "Harcművészet",
+        "difficulty": "NORMAL",
+        "attribute": "SPEED"
+      },
+      "value": 3
+    },
+    {
+      "skillDef": {
+        "id": 1,
+        "name": "Fájdalomtűrés",
+        "difficulty": "HARD",
+        "attribute": "STAMINA"
+      },
+      "value": 2
+    },
+    {
+      "skillDef": {
+        "id": 7,
+        "name": "Földharc",
+        "difficulty": "NORMAL",
+        "attribute": "STRENGTH"
+      },
+      "value": 2
+    }
+  ]
+}
