@@ -1,26 +1,24 @@
 package com.example.skills.service;
 
-import com.example.skills.dto.BulkUploadDTO;
 import com.example.skills.dto.PlayerDto;
+import com.example.skills.entity.AttributeEntity;
 import com.example.skills.entity.PlayerEntity;
 import com.example.skills.mapper.PlayerMapper;
 import com.example.skills.repository.PlayerRepository;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.example.skills.mapper.PlayerMapper.toDto;
 
 @Service
 public class PlayerService {
 
-    private PlayerRepository repository;
+    private final PlayerRepository repository;
 
     public PlayerService(PlayerRepository repository) {
         this.repository = repository;
-    }
-
-    public boolean existsById(Long id) {
-        return repository.findById(id).isPresent();
     }
 
     public PlayerDto findById(Long id) {
@@ -29,14 +27,30 @@ public class PlayerService {
         }
         Optional<PlayerEntity> optionalPlayerEntity = repository.findById(id);
         if (optionalPlayerEntity.isPresent()) {
-            return PlayerMapper.toDto(optionalPlayerEntity.get());
+            return toDto(optionalPlayerEntity.get());
         } else {
             throw new IllegalArgumentException("No player with id: " + id);
         }
     }
 
 
-    public PlayerDto updatePlayer(PlayerDto playerDto, @Valid BulkUploadDTO dto) {
-        return playerDto; //TODO IMPLEMENT
+    @Transactional
+    public PlayerDto updatePlayer(Long id, PlayerDto incoming) {
+        PlayerEntity incomingEntity = PlayerMapper.toEntity(incoming);
+
+        PlayerEntity managed = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        managed.setName(incoming.getName());
+        managed.setRace(incoming.getRace());
+        // update attributes
+        for (AttributeEntity updatedAttr : incomingEntity.getAttributes()) {
+            managed.getAttributes().stream()
+                    .filter(a -> a.getId().equals(updatedAttr.getId()))
+                    .findFirst()
+                    .ifPresent(a -> a.setValue(updatedAttr.getValue()));
+        }
+        // skills, etc.
+        return toDto(managed);
     }
 }

@@ -1,13 +1,26 @@
 package com.example.skills.dto;
 
-import com.example.skills.entity.Difficulty;
 import com.example.skills.entity.SkillDefinitionDifficulty;
 import com.example.skills.entity.SkillType;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.Objects;
-
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "difficulty",     // must be present in JSON before binding
+        visible = true
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PercentSkillDto.class, name = "PERCENT"),
+        @JsonSubTypes.Type(value = LevelSkillDto.class,   name = "EASY"),
+        @JsonSubTypes.Type(value = LevelSkillDto.class,   name = "NORMAL"),
+        @JsonSubTypes.Type(value = LevelSkillDto.class,   name = "HARD"),
+        @JsonSubTypes.Type(value = LevelSkillDto.class,   name = "VERY_HARD"),
+        @JsonSubTypes.Type(value = LevelSkillDto.class,   name = "KNOWLEDGE")
+})
 public sealed abstract class SkillDto
-        permits PercentSkillDto, LevelSkillDto{
+        permits PercentSkillDto, LevelSkillDto {
 
     protected Long id;
     protected String name;
@@ -18,6 +31,9 @@ public sealed abstract class SkillDto
     protected SkillDefinitionDifficulty difficulty;
     protected Category category;
 
+    public SkillDto() {
+    }
+
     public SkillDto(Long id, String name, SkillType type, AttributeName attributeName, int attributeValue, Long playerId, SkillDefinitionDifficulty difficulty) {
         this.id = id;
         this.name = name;
@@ -26,9 +42,6 @@ public sealed abstract class SkillDto
         this.attributeValue = attributeValue;
         this.playerId = playerId;
         this.difficulty = difficulty;
-    }
-
-    public SkillDto() {
     }
 
     public abstract void addKp(int kp);

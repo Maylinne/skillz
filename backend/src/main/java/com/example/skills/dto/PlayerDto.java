@@ -11,6 +11,9 @@ public class PlayerDto {
     private List<AttributeDto> attributes = new ArrayList<>();
     private List<SkillDto> skills = new ArrayList<>();
 
+    public PlayerDto() {
+    }
+
     public PlayerDto(String name, Race race) {
         this.name = name;
         this.race = race;

@@ -18,10 +18,10 @@ public class PlayerEntity {
     private Race race;
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AttributeEntity> attributes = new ArrayList<>();
+    private final List<AttributeEntity> attributes = new ArrayList<>();
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SkillEntity> skills = new ArrayList<>();
+    private final List<SkillEntity> skills = new ArrayList<>();
 
     public PlayerEntity() {}
 
@@ -49,8 +49,6 @@ public class PlayerEntity {
     public List<SkillEntity> getSkills() {
         return skills;
     }
-
-
 
     public AttributeEntity getAttribute(AttributeName name) {
         return attributes.stream()
