@@ -1,89 +1,67 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 const initialState = {
-  id: 'player-001',
-  name: 'Zaheera',
-  race: 'HUMAN',
-  attributes: [
-    { id: 'attr-1', name: 'STRENGTH', value: 10, playerId: 'player-001' },
-    { id: 'attr-2', name: 'DEXTERITY', value: 16, playerId: 'player-001' },
-    { id: 'attr-3', name: 'SPEED', value: 11, playerId: 'player-001' },
-    { id: 'attr-4', name: 'STAMINA', value: 12, playerId: 'player-001' },
-    { id: 'attr-5', name: 'HEALTH', value: 10, playerId: 'player-001' },
-    { id: 'attr-6', name: 'CHARISMA', value: 13, playerId: 'player-001' },
-    { id: 'attr-7', name: 'INTELLIGENCE', value: 17, playerId: 'player-001' },
-    { id: 'attr-8', name: 'WILLPOWER', value: 16, playerId: 'player-001' },
-    { id: 'attr-9', name: 'ASTRAL', value: 16, playerId: 'player-001' },
-    { id: 'attr-10', name: 'PERCEPTION', value: 14, playerId: 'player-001' }
-  ],
-  skills: [
-    {
-      skillDef: {
-        id: 8,
-        name: 'Ostromgép',
-        difficulty: 'NORMAL',
-        attribute: 'INTELLIGENCE'
-      },
-      value: 1
-    },
-    {
-      skillDef: {
-        id: 11,
-        name: 'Taktika',
-        difficulty: 'NORMAL',
-        attribute: 'INTELLIGENCE'
-      },
-      value: 2
-    },
-    {
-      skillDef: {
-        id: 13,
-        name: 'Harcművészet',
-        difficulty: 'NORMAL',
-        attribute: 'SPEED'
-      },
-      value: 3
-    },
-    {
-      skillDef: {
-        id: 1,
-        name: 'Fájdalomtűrés',
-        difficulty: 'HARD',
-        attribute: 'STAMINA'
-      },
-      value: 2
-    },
-    {
-      skillDef: {
-        id: 7,
-        name: 'Földharc',
-        difficulty: 'NORMAL',
-        attribute: 'STRENGTH'
-      },
-      value: 2
-    }
-  ]
+  current: null,
+  lastSaved: null, 
+  autosave: true,
+  status: 'idle',   // 'idle' | 'loading' | 'succeeded' | 'failed'
+  error: null
 };
 
 const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    incrementAttribute(state, action) {
-      const attr = state.attributes.find(a => a.name === action.payload);
-      if (attr) {
-        attr.value++;
-      }
+    incrementAttribute(state, action) { /* same as before but guard null */ 
+      if (!state.current) return;
+      const attr = state.current.attributes.find(a => a.name === action.payload);
+      if (attr) attr.value++;
+    },
+    decrementAttribute(state, action) {
+      if (!state.current) return;
+      const attr = state.current.attributes.find(a => a.name === action.payload);
+      if (attr) attr.value--;
+    },
+    setAutosave(state, action) { state.autosave = !!action.payload; },
+
+
+    snapshotSaved(state) {
+      if (!state.current) return;
+      state.lastSaved = JSON.parse(JSON.stringify(state.current));
+    },
+
+    loadPlayer(state, action) {
+      state.current   = action.payload;
+      state.lastSaved = JSON.parse(JSON.stringify(action.payload));
+      state.status = 'succeeded';
+      state.error = null;
     },
     
-    decrementAttribute(state, action) {
-      const attr = state.attributes.find(a => a.name === action.payload);
-      if (attr) {
-        attr.value--;
-      }
+    setLoading(state) { 
+      state.status = 'loading'; state.error = null; 
+    },
+    setError(state, action) { 
+      state.status = 'failed'; state.error = action.payload || 'Load failed'; 
+    },
+    replaceCurrent(state, action) {
+      state.current = action.payload;
     }
   }
 });
 
-export const playerActions = playerSlice.actions;
+
+export const {
+  incrementAttribute, decrementAttribute,
+  setAutosave, snapshotSaved, loadPlayer, setLoading, setError, replaceCurrent
+} = playerSlice.actions;
+
 export default playerSlice.reducer;
+
+// -------- Selectors --------
+export const selectPlayer       = (s) => s.player.current;
+export const selectLastSaved    = (s) => s.player.lastSaved;
+export const selectAutosave     = (s) => s.player.autosave;
+export const selectStatus       = (s) => s.player.status;
+export const selectIsDirty      = (s) => !deepEqual(s.player.current, s.player.lastSaved);

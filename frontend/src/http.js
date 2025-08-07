@@ -31,6 +31,5 @@ export async function fetchPlayerSkills({ id }) {
   }
 
   const data = await response.json(); 
-  console.log("Fetched from backend:", data);
   return data;
 }

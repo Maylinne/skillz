@@ -1,51 +1,33 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { playerActions } from '../store/playerSlice';
 import * as Derived from '../utils/derivedAttrs';
-import { useState } from 'react';
+import { incrementAttribute, decrementAttribute } from '../store/playerSlice';
 
-export default function Player() {
-    const [editMode, setEditMode] = useState(false);
+export default function Player({editMode}) {
 
     const dispatch = useDispatch();
-    const player = useSelector(state => state.player);
+    const player = useSelector(state => state.player); 
 
-    const initiative = Derived.initiative(player.attributes);
-    const attack = Derived.attack(player.attributes);
-    const defense = Derived.defense(player.attributes);
-    const aim = Derived.aim(player.attributes);
+    const initiative = Derived.initiative(player.current.attributes);
+    const attack = Derived.attack(player.current.attributes);
+    const defense = Derived.defense(player.current.attributes);
+    const aim = Derived.aim(player.current.attributes);
 
     function handleIncrease(attrName) {
-        dispatch(playerActions.incrementAttribute(attrName));
+        dispatch(incrementAttribute(attrName));
     }
 
     function handleDecrease(attrName) {
-        dispatch(playerActions.decrementAttribute(attrName));
+        dispatch(decrementAttribute(attrName));
     }
 
     return (
         <>
-            <div id='header' className='flex flex-row'>
-                <h2 className='mx-8'>{player.name}</h2>
-
-                <label className="inline-flex items-center mb-5 cursor-pointer mx-4 mt-2">
-                    <input type="checkbox"
-                        checked={editMode}
-                        onChange={(e) => {
-                            setEditMode(e.target.checked);
-                            console.log("Edit mode is now:", e.target.checked);
-                        }}
-                        className="sr-only peer" />
-                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-500"></div>
-                    <span className="ms-3 text-sm font-medium text-violet-200"> Edit mode </span>
-                </label>
-            </div>
-
             <div className='flex flex-row'>
                 <div id='attributes'
                     className='mt-4 ml-4 flex justify-start flex-col'>
                     <h3 className="text-violet-200 w-60 mb-2 font-semibold text-2xl"> Attributes </h3>
                     <ul>
-                        {player.attributes.map(attr => (
+                        {player.current.attributes.map(attr => (
 
                             <li key={attr.id}
                                 className="flex items-center justify-between w-52 py-1 text-violet-200 hover:bg-violet-950"
